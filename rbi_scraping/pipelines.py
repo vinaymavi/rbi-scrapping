@@ -8,4 +8,5 @@
 
 class RbiScrapingPipeline(object):
     def process_item(self, item, spider):
+        print "Pipeline calling."
         return item

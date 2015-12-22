@@ -5,13 +5,14 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+from scrapy import Item, Field
 
 
-class Bank(scrapy.Item):
-    name = scrapy.Field()
-    url = scrapy.Field()
+class Bank(Item):
+    name = Field()
+    url = Field()
+    file_urls = Field()
 
 
-class UpdateDate(scrapy.Item):
-    date = scrapy.Field()
+class UpdateDate(Item):
+    date = Field()

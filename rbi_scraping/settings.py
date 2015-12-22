@@ -13,8 +13,6 @@ BOT_NAME = 'rbi_scraping'
 
 SPIDER_MODULES = ['rbi_scraping.spiders']
 NEWSPIDER_MODULE = 'rbi_scraping.spiders'
-
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'rbi_scraping (+http://www.yourdomain.com)'
 
@@ -61,9 +59,8 @@ NEWSPIDER_MODULE = 'rbi_scraping.spiders'
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'rbi_scraping.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {'scrapy.pipelines.files.FilesPipeline': 1}
+FILES_STORE = '/Users/vinaymavi/rbi_ifsc_xls/'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
