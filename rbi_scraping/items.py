@@ -11,3 +11,7 @@ import scrapy
 class Bank(scrapy.Item):
     name = scrapy.Field()
     url = scrapy.Field()
+
+
+class UpdateDate(scrapy.Item):
+    date = scrapy.Field()
