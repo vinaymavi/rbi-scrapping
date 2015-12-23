@@ -7,6 +7,10 @@
 
 
 class RbiScrapingPipeline(object):
+    """
+    This is temp pipeline for testing.
+    """
+
     def process_item(self, item, spider):
         print "Pipeline calling."
         return item
