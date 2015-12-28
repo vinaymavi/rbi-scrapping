@@ -8,6 +8,7 @@ from os import listdir
 import os
 import datetime
 import logging
+from csv_processing.google.gcs.gsc import GCS
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +36,7 @@ class Xls(object):
         :return:
         """
         dir_list = listdir(self.xls_path)
-        file_name = self._create_csv_name()+".csv"
+        file_name = self._create_csv_name() + ".csv"
         total = 0
         count = 0
         for f in dir_list:
@@ -57,6 +58,7 @@ class Xls(object):
                     csv_file.close()
 
         logger.info("Total banks=%s", total)
+        GCS.copy(self.csv_path + file_name)
 
     def create_tar(self):
         """
