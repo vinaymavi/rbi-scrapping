@@ -5,6 +5,7 @@ from csv_processing.xls import Bank as bank_csv
 
 class RbiSpider(scrapy.Spider):
     DATA = 'data/rbi.txt'
+    # TODO configure banks.csv in global settings.py
     BANKS_NAME_FILE_NAME = 'banks.csv'
     name = 'rbi'
     start_urls = ['https://www.rbi.org.in/Scripts/bs_viewcontent.aspx?Id=2009']
@@ -13,8 +14,8 @@ class RbiSpider(scrapy.Spider):
 
     def parse(self, response):
         update_date = UpdateDate()
-        update_dateList = response.xpath('//*[@id="example-min"]/div/table/tr/th/text()').extract()
-        update_date['date'] = update_dateList[0].split('on')[1]
+        update_date_list = response.xpath('//*[@id="example-min"]/div/table/tr/th/text()').extract()
+        update_date['date'] = update_date_list[0].split('on')[1]
         banks_url_list = response.xpath('//*[@id="example-min"]/div/table/tr[2]/td/table/tr/td/a/@href').extract()
         banks_name_list = response.xpath('//*[@id="example-min"]/div/table/tr[2]/td/table/tr/td/a/text()').extract()
         for index, val in enumerate(banks_url_list):

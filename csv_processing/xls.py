@@ -58,7 +58,8 @@ class Xls(object):
                     csv_file.close()
 
         logger.info("Total banks=%s", total)
-        GCS.copy(self.csv_path + file_name)
+        # TODO configure banks.csv in global settings.py
+        GCS.copy(self.csv_path + file_name, self.csv_path + "banks.csv")
 
     def create_tar(self):
         """
@@ -87,7 +88,7 @@ class Bank(object):
         :param path:String path to create csv of bank names.
         :return:
         """
-        csv_file = open(path + "banks.csv", 'a')
+        csv_file = open(path, 'a')
         wr = unicodecsv.writer(csv_file, quoting=csv.QUOTE_ALL, delimiter=';')
         wr.writerow(["Banks"])
         try:
