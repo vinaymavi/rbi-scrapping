@@ -76,3 +76,24 @@ class Xls(object):
         if not os.path.exists(self.csv_path):
             os.makedirs(self.csv_path)
         return _date_str
+
+
+class Bank(object):
+    @staticmethod
+    def create_csv(banks, path):
+        """
+        Create a csv that contains all banks name.
+        :param banks:list name of banks
+        :param path:String path to create csv of bank names.
+        :return:
+        """
+        csv_file = open(path + "banks.csv", 'a')
+        wr = unicodecsv.writer(csv_file, quoting=csv.QUOTE_ALL, delimiter=';')
+        wr.writerow(["Banks"])
+        try:
+            for row in banks:
+                wr.writerow([row])
+        except Exception as e:
+            logger.info(e.message)
+        finally:
+            csv_file.close()
