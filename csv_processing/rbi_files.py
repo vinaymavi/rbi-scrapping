@@ -8,7 +8,8 @@ from os import listdir
 import os
 import datetime
 import logging
-from csv_processing.google.gcs.gsc import GCS
+from tempfile import NamedTemporaryFile
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ class Xls(object):
         :return:
         """
         dir_list = listdir(self.xls_path)
-        file_name = self._create_csv_name() + ".csv"
+        file_name = self.create_csv_name()
         total = 0
         count = 0
         for f in dir_list:
@@ -51,15 +52,17 @@ class Xls(object):
                 wr = unicodecsv.writer(csv_file, quoting=csv.QUOTE_ALL, delimiter=';')
                 total += sheet.nrows
                 logger.info("Total Rows=%s, %s, %s", f, count, sheet.nrows)
+                first_row = True
                 try:
                     for row_num in xrange(sheet.nrows):
-                        wr.writerow(sheet.row_values(row_num))
+                        if first_row:
+                            first_row = False
+                        else:
+                            wr.writerow(sheet.row_values(row_num))
                 finally:
                     csv_file.close()
 
         logger.info("Total banks=%s", total)
-        # TODO configure banks.csv in global settings.py
-        GCS.copy(self.csv_path + file_name, self.csv_path + "banks.csv")
 
     def create_tar(self):
         """
@@ -67,7 +70,7 @@ class Xls(object):
         :return:
         """
 
-    def _create_csv_name(self):
+    def create_csv_name(self):
         """
         convert MM_DD_YYYY format string.
         :return:
@@ -76,7 +79,7 @@ class Xls(object):
 
         if not os.path.exists(self.csv_path):
             os.makedirs(self.csv_path)
-        return _date_str
+        return _date_str + ".csv"
 
 
 class Bank(object):
@@ -89,8 +92,7 @@ class Bank(object):
         :return:
         """
         csv_file = open(path, 'a')
-        wr = unicodecsv.writer(csv_file, quoting=csv.QUOTE_ALL, delimiter=';')
-        wr.writerow(["Banks"])
+        wr = unicodecsv.writer(csv_file, delimiter=';')
         try:
             for row in banks:
                 wr.writerow([row])
@@ -98,3 +100,39 @@ class Bank(object):
             logger.info(e.message)
         finally:
             csv_file.close()
+
+
+class Csv(object):
+    @staticmethod
+    def validate(file_path):
+        """
+        Remove XLS file headers.
+        :param file_path:String path of csv file.
+        :return:
+        """
+        logger.info(file_path)
+        tempfile = NamedTemporaryFile(delete=False)
+        with open(file_path, 'rb') as file_csv, tempfile:
+            reader = csv.reader(file_csv, delimiter=';', quotechar='"')
+            writer = unicodecsv.writer(tempfile, quoting=csv.QUOTE_ALL, delimiter=';')
+            for row in reader:
+                if row[0] != "BANK":
+                    print row[0]
+                    writer.writerow(row)
+            shutil.move(tempfile.name, file_path)
+
+    @staticmethod
+    def get_banks(file_path):
+        """
+        return set of banks name.
+        :param file_path: String path of csv file.
+        :return: set
+        """
+        logger.info(file_path)
+        bank_list = []
+        with open(file_path, 'rb') as file_csv:
+            reader = csv.reader(file_csv, delimiter=';', quotechar='"')
+            for row in reader:
+                print row[0]
+                bank_list.append(row[0])
+        return set(bank_list)

@@ -64,6 +64,7 @@ FILES_STORE = '/Users/vinaymavi/rbi_ifsc_xls/'
 XLS_PATH = '/Users/vinaymavi/rbi_ifsc_xls/full/'
 CSV_PATH = '/Users/vinaymavi/rbi_ifsc_xls/csv/'
 TAR_PATH = '/Users/vinaymavi/rbi_ifsc_xls/tar/'
+BANKS_NAME_FILE_NAME = 'banks.csv'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

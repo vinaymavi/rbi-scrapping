@@ -4,19 +4,21 @@ This is CSV class to create csv from all xls files and send then to server.
 
 from scrapy.exceptions import NotConfigured
 from scrapy import signals
-from csv_processing.xls import Xls
+from csv_processing.rbi_files import Xls, Bank, Csv as xls_csv
 import logging
+from csv_processing.google.gcs.gsc import GCS
 
 logger = logging.getLogger(__name__)
 
 
 class Csv(object):
-    def __init__(self, item_count, xls_path, csv_path, tar_path):
+    def __init__(self, item_count, xls_path, csv_path, tar_path, bank_file_path):
         self.item_count = item_count
         self.total_item_scraped = 0
         self.xls_path = xls_path
         self.csv_path = csv_path
         self.tar_path = tar_path
+        self.bank_file_path = bank_file_path
         logger.info("Csv extension object created.")
 
     @classmethod
@@ -35,7 +37,8 @@ class Csv(object):
         xls_path = crawler.settings['XLS_PATH']
         csv_path = crawler.settings['CSV_PATH']
         tar_path = crawler.settings['TAR_PATH']
-        ext = cls(item_count, xls_path, csv_path, tar_path)
+        bank_file_path = crawler.settings['BANKS_NAME_FILE_NAME']
+        ext = cls(item_count, xls_path, csv_path, tar_path, bank_file_path)
         # connect the extension object to signals
         crawler.signals.connect(ext.spider_opened, signal=signals.spider_opened)
         crawler.signals.connect(ext.spider_closed, signal=signals.spider_closed)
@@ -50,7 +53,11 @@ class Csv(object):
         logger.info("closed spider %s", spider.name)
         logger.info("Start xls parsing")
         xls = Xls(self.xls_path, self.csv_path, self.tar_path)
+        file_name = xls.create_csv_name()
         xls.process()
+        xls_csv.validate(xls.csv_path + file_name)
+        Bank.create_csv(xls_csv.get_banks(xls.csv_path + file_name), xls.csv_path + self.bank_file_path)
+        GCS.copy(self.csv_path + file_name, self.csv_path + self.bank_file_path)
 
     def item_scraped(self, item, spider):
         self.total_item_scraped += 1
