@@ -16,7 +16,7 @@ class CsvTest(unittest.TestCase):
         Bank.create_csv(Csv.get_banks(BRANCH_CSV_PATH), CSV_PATH + 'banks.csv')
 
     def test_csv_validation(self):
-        CSV_PATH = "/Users/vinaymavi/rbi_ifsc_xls/csv/Jan_02_2016.csv"
+        CSV_PATH = "/Users/vinaymavi/rbi_ifsc_xls/csv/old_csv/Jan_02_2016.csv"
         Csv.validate(CSV_PATH)
 
 

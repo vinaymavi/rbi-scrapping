@@ -116,10 +116,17 @@ class Csv(object):
             reader = csv.reader(file_csv, delimiter=';', quotechar='"')
             writer = unicodecsv.writer(tempfile, quoting=csv.QUOTE_ALL, delimiter=';')
             for row in reader:
+                row = Csv._remove_slash_n(row)
                 if row[0] != "BANK":
-                    print row[0]
                     writer.writerow(row)
             shutil.move(tempfile.name, file_path)
+
+    @staticmethod
+    def _remove_slash_n(row):
+        temp = []
+        for col in row:
+            temp.append("".join(col.split("\n")))
+        return temp
 
     @staticmethod
     def get_banks(file_path):
