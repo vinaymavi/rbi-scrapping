@@ -6,5 +6,5 @@ This is web scarping project to rbi ifsc codes  and doing following opration.
 * push file GCD.
 
 ##How to run
-set correct bucket name in gcs.py
-run cron.sh 
+* set correct bucket name in gcs.py
+* run cron.sh 
