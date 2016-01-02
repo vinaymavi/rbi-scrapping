@@ -41,8 +41,6 @@ class Xls(object):
         total = 0
         count = 0
         for f in dir_list:
-            logger.info(f)
-            print f
             if f.endswith(".xls"):
                 count += 1
                 workbook = xlrd.open_workbook(self.xls_path + f)
