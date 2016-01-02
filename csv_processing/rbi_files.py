@@ -75,7 +75,8 @@ class Xls(object):
         convert MM_DD_YYYY format string.
         :return:
         """
-        _date_str = datetime.datetime.today().strftime("%b_%d_%Y")
+        # _date_str = datetime.datetime.today().strftime("%b_%d_%Y")
+        _date_str = "branch"
 
         if not os.path.exists(self.csv_path):
             os.makedirs(self.csv_path)
@@ -140,6 +141,5 @@ class Csv(object):
         with open(file_path, 'rb') as file_csv:
             reader = csv.reader(file_csv, delimiter=';', quotechar='"')
             for row in reader:
-                print row[0]
                 bank_list.append(row[0])
         return set(bank_list)
