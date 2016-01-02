@@ -5,6 +5,6 @@ This is web scarping project to rbi ifsc codes  and doing following opration.
 * Merge all excel files to csv.
 * push file GCD.
 
-[How to run]
-To run this project yo need to create of use existing vertual env known as.
-scrapy.
+##How to run
+* set correct bucket name in gcs.py
+* run cron.sh 
