@@ -37,11 +37,11 @@ class Xls(object):
         :return:
         """
         dir_list = listdir(self.xls_path)
-        file_name = self.create_csv_name()
         total = 0
         count = 0
         for f in dir_list:
-            if f.endswith(".xls"):
+            if f.endswith(".xls") or f.endswith(".xlsx"):
+                file_name = self.create_csv_name(f)
                 count += 1
                 workbook = xlrd.open_workbook(self.xls_path + f)
                 sheet = workbook.sheet_by_index(0)
@@ -65,20 +65,49 @@ class Xls(object):
     def create_tar(self):
         """
         Create tar of processed csv files and delete them.
+        :param file_name xls/xlsx file name.
         :return:
         """
 
-    def create_csv_name(self):
+    def create_csv_name(self, file_name):
         """
         convert MM_DD_YYYY format string.
         :return:
         """
         # _date_str = datetime.datetime.today().strftime("%b_%d_%Y")
-        _date_str = "branch"
+        # _date_str = "branch"
 
         if not os.path.exists(self.csv_path):
             os.makedirs(self.csv_path)
-        return _date_str + ".csv"
+        return file_name.split('.')[0] + ".csv"
+
+    def rename_files(self):
+        '''
+        Rename xls/xlsx file with bank names.
+        :return:
+        '''
+        dir_list = listdir(self.xls_path)
+        first_line = None
+        bank_name = None
+        count=0
+        for f in dir_list:
+            if f.endswith(".xls") or f.endswith(".xlsx"):
+                workbook = xlrd.open_workbook(self.xls_path + f)
+                sheet = workbook.sheet_by_index(0)
+                # csv file path should be exists in path.
+                first_row = True
+                try:
+                    for row_num in xrange(sheet.nrows):
+                        if first_row:
+                            first_row = False
+                        else:
+                            first_line = sheet.row_values(row_num)
+                            bank_name = first_line[0]
+                            logger.info(first_line[0])
+                            break
+                finally:
+                    workbook.release_resources()
+                    os.rename(self.xls_path + f, self.xls_path + bank_name.replace(' ', '_') + "_" + f)
 
 
 class Bank(object):

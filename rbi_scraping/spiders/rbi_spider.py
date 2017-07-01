@@ -1,6 +1,8 @@
 import scrapy
 from rbi_scraping.items import UpdateDate, Bank
+import logging
 
+logger = logging.getLogger(__name__)
 
 class RbiSpider(scrapy.Spider):
     DATA = 'data/rbi.txt'
@@ -16,10 +18,15 @@ class RbiSpider(scrapy.Spider):
         update_date_list = response.xpath('//*[@id="example-min"]/div/table/tr/th/text()').extract()
         update_date['date'] = update_date_list[0].split('on')[1]
         banks_url_list = response.xpath('//*[@id="example-min"]/div/table/tr[2]/td/table/tr/td/a/@href').extract()
+        logger.info('*****************URLs Info******************')
+        logger.info('Bank list length = '+str(len(banks_url_list)))
         for index, val in enumerate(banks_url_list):
             bank = Bank()
+            logger.info(index)
+            logger.info(val)
             bank['url'] = val
             https_val = val.replace('http', 'https')
             bank['file_urls'] = [https_val]
             self.file_urls.append(bank)
+        logger.info('********************************************')
         return self.file_urls

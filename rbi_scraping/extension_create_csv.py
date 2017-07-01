@@ -53,11 +53,12 @@ class Csv(object):
         logger.info("closed spider %s", spider.name)
         logger.info("Start xls parsing")
         xls = Xls(self.xls_path, self.csv_path, self.tar_path)
-        file_name = xls.create_csv_name()
+        # file_name = xls.create_csv_name()
+        xls.rename_files()
         xls.process()
-        xls_csv.validate(xls.csv_path + file_name)
-        Bank.create_csv(xls_csv.get_banks(xls.csv_path + file_name), xls.csv_path + self.bank_file_path)
-        GCS.copy(self.csv_path + file_name, self.csv_path + self.bank_file_path)
+        # xls_csv.validate(xls.csv_path + file_name)
+        # Bank.create_csv(xls_csv.get_banks(xls.csv_path + file_name), xls.csv_path + self.bank_file_path)
+        GCS.copy(self.csv_path)
 
     def item_scraped(self, item, spider):
         self.total_item_scraped += 1
