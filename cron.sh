@@ -8,8 +8,8 @@
 #
 
 
-source  /Users/vinaymavi/envs/scrapy/bin/activate
-cd  /Users/vinaymavi/appengine/rbi_scraping
+source  /Users/vinaymavi/virtualenv/rbi_scrapping/bin/activate
+cd  /Users/vinaymavi/github/rbi-scrapping
 scrapy crawl rbi
 deactivate
 d=$(date +%y-%m-%d)

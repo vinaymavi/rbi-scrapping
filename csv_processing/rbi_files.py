@@ -13,6 +13,7 @@ import shutil
 
 logger = logging.getLogger(__name__)
 
+# TODO test case need for this file.
 
 class Xls(object):
     xls_path = ''
@@ -151,9 +152,10 @@ class Csv(object):
 
     @staticmethod
     def _remove_slash_n(row):
+        #TODO line still exists for NORTH MALABAR GRAMIN BANK:197 line.
         temp = []
         for col in row:
-            temp.append("".join(col.split("\n")))
+            temp.append("""""".join("""""".join(col.splitlines()).splitlines()))
         return temp
 
     @staticmethod
